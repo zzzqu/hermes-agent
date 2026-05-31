@@ -4099,6 +4099,11 @@ class AIAgent:
         Some providers/routes reject `reasoning` with 400s, so gate it to
         known reasoning-capable model families and direct Nous Portal.
         """
+        # Custom provider: honor explicit supports_reasoning declaration
+        # from config (set by _merge_custom_provider_extra_body).
+        if (self.provider or "").startswith("custom"):
+            if getattr(self, "_custom_supports_reasoning", False):
+                return True
         if base_url_host_matches(self._base_url_lower, "nousresearch.com"):
             return True
         if (

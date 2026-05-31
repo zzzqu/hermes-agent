@@ -3429,6 +3429,7 @@ def _normalize_custom_provider_entry(
         "context_length", "rate_limit_delay",
         "request_timeout_seconds", "stale_timeout_seconds",
         "discover_models", "extra_body",
+        "supports_reasoning",
     }
     for camel, snake in _CAMEL_ALIASES.items():
         if camel in entry and snake not in entry:
@@ -3526,6 +3527,10 @@ def _normalize_custom_provider_entry(
     extra_body = entry.get("extra_body")
     if isinstance(extra_body, dict):
         normalized["extra_body"] = dict(extra_body)
+
+    supports_reasoning = entry.get("supports_reasoning")
+    if isinstance(supports_reasoning, bool):
+        normalized["supports_reasoning"] = supports_reasoning
 
     return normalized
 

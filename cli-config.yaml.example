@@ -102,6 +102,12 @@ model:
 #     models:
 #       gpt-5.4:
 #         stale_timeout_seconds: 1800  # Longer non-stream stale timeout for slow large-context turns
+#   # Custom provider with reasoning support:
+#   my-reasoning-provider:
+#     url: "https://api.example.com/v1"
+#     key_env: "MY_API_KEY"
+#     model: "qwen3.6-plus"
+#     supports_reasoning: true   # Enables reasoning_effort passthrough
 
 # =============================================================================
 # OpenRouter Provider Routing (only applies when using OpenRouter)
@@ -590,9 +596,10 @@ agent:
   # Enable verbose logging
   verbose: false
   
-  # Reasoning effort level (OpenRouter and Nous Portal)
+  # Reasoning effort level (OpenRouter, Nous Portal, and custom providers)
   # Controls how much "thinking" the model does before responding.
   # Options: "xhigh" (max), "high", "medium", "low", "minimal", "none" (disable)
+  # For custom providers, set supports_reasoning: true in the provider config.
   reasoning_effort: "medium"
   
   # Predefined personalities (use with /personality command)

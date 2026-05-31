@@ -342,6 +342,19 @@ class ChatCompletionsTransport(ProviderTransport):
             if _lm_effort is not None:
                 api_kwargs["reasoning_effort"] = _lm_effort
 
+        # Custom provider: top-level reasoning_effort when the user has
+        # declared supports_reasoning in their provider config.
+        if params.get("is_custom_provider", False) and params.get("supports_reasoning", False):
+            if reasoning_config and isinstance(reasoning_config, dict):
+                if reasoning_config.get("enabled") is not False:
+                    _effort = str(
+                        reasoning_config.get("effort", "medium") or "medium"
+                    ).strip().lower()
+                    if _effort in {"minimal", "low", "medium", "high", "xhigh"}:
+                        api_kwargs["reasoning_effort"] = _effort
+            elif reasoning_config is None:
+                api_kwargs["reasoning_effort"] = "medium"
+
         # extra_body assembly
         extra_body: dict[str, Any] = {}
 

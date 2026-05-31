@@ -121,10 +121,18 @@ def _merge_custom_provider_extra_body(agent, custom_providers: List[Dict[str, An
         base_url=agent.base_url,
         custom_providers=custom_providers,
     )
+
+    # Extract supports_reasoning from request_overrides so it doesn't leak
+    # into api_kwargs (it's a control flag, not an API parameter).
+    overrides = dict(getattr(agent, "request_overrides", {}) or {})
+    sr = overrides.pop("supports_reasoning", None)
+    if isinstance(sr, bool):
+        agent._custom_supports_reasoning = sr
+        agent.request_overrides = overrides
+
     if not extra_body:
         return
 
-    overrides = dict(getattr(agent, "request_overrides", {}) or {})
     merged_extra_body = dict(extra_body)
     existing_extra_body = overrides.get("extra_body")
     if isinstance(existing_extra_body, dict):

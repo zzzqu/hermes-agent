@@ -617,10 +617,14 @@ def _get_named_custom_provider(requested_provider: str) -> Optional[Dict[str, An
 
 
 def _custom_provider_request_overrides(custom_provider: Dict[str, Any]) -> Dict[str, Any]:
+    result: Dict[str, Any] = {}
     extra_body = custom_provider.get("extra_body")
-    if not isinstance(extra_body, dict) or not extra_body:
-        return {}
-    return {"extra_body": dict(extra_body)}
+    if isinstance(extra_body, dict) and extra_body:
+        result["extra_body"] = dict(extra_body)
+    supports_reasoning = custom_provider.get("supports_reasoning")
+    if isinstance(supports_reasoning, bool):
+        result["supports_reasoning"] = supports_reasoning
+    return result
 
 
 def _resolve_named_custom_runtime(
